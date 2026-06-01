@@ -2,6 +2,7 @@
 
 #include <iostream>
 #include <vector>
+#include <chrono>
 
 #include <gtest/gtest.h>
 #include <tuple>
@@ -789,6 +790,125 @@ TEST(E2ETest, VerifyShapeIsBoxUsingDotAndCross) {
     // --------------------------------------------------------
 
     SUCCEED();
+}
+
+// ============================================================
+// SPECIALIZED TESTS
+// ============================================================
+
+// This test performs a large number of quaternion rotations
+TEST(SpecializedTest, LoadTest_MillionQuaternionRotations) {
+
+    Vec3 v{ 1,0,0 };
+
+    Quat q =
+        quatFromAxisAngle({ 0,1,0 }, 45);
+
+	// Perform 1 million rotations to check for stability and performance.
+    for (int i = 0; i < 1000000; i++) {
+
+        v = quatRotate(q, v);
+
+        ASSERT_FALSE(std::isnan(v.x));
+        ASSERT_FALSE(std::isnan(v.y));
+        ASSERT_FALSE(std::isnan(v.z));
+    }
+
+    SUCCEED();
+}
+
+// This test checks how the system handles extreme coordinate values during rotation
+TEST(SpecializedTest, StressTest_ExtremeCoordinateRotation) {
+
+	// Extreme values can cause floating-point instability.
+    Vec3 v{ 1e30, -1e30, 1e30 };
+
+    Quat q =
+        quatFromAxisAngle({ 1,0,0 }, 180);
+
+    Vec3 result =
+        quatRotate(q, v);
+
+    EXPECT_FALSE(std::isnan(result.x));
+    EXPECT_FALSE(std::isinf(result.x));
+}
+
+// This test benchmarks the performance of quaternion rotations
+TEST(SpecializedTest, PerformanceTest_QuaternionBenchmark) {
+
+    Vec3 v{ 1,0,0 };
+
+    Quat q =
+        quatFromAxisAngle({ 0,0,1 }, 45);
+
+    auto start =
+        std::chrono::high_resolution_clock::now();
+
+    for (int i = 0; i < 1000000; i++) {
+        v = quatRotate(q, v);
+    }
+
+    auto end =
+        std::chrono::high_resolution_clock::now();
+
+    auto duration =
+        std::chrono::duration_cast<
+        std::chrono::milliseconds
+        >(end - start);
+
+    std::cout
+        << "Execution Time: "
+        << duration.count()
+        << " ms\n";
+
+    SUCCEED();
+}
+
+// This test checks the formatting of floating-point numbers in the output stream
+TEST(SpecializedTest, GlobalizationTest_FloatingPointFormatting) {
+
+    double value = 3.1415926535;
+
+    std::stringstream ss;
+
+    ss << value;
+
+    EXPECT_FALSE(ss.str().empty());
+}
+
+// This test checks how the system handles NaN inputs during quaternion rotation
+TEST(SpecializedTest, SecurityTest_NaNInputHandling) {
+
+    Vec3 v{
+        NAN,
+        0,
+        0
+    };
+
+    Quat q =
+        quatFromAxisAngle({ 0,0,1 }, 45);
+
+    Vec3 result =
+        quatRotate(q, v);
+
+    EXPECT_TRUE(std::isnan(result.x));
+}
+
+// This test checks for numerical stability when applying repeated rotations
+TEST(SpecializedTest, NumericalStabilityTest_RepeatedRotationDrift) {
+
+    Vec3 original{ 1,0,0 };
+
+    Vec3 current = original;
+
+    Quat q =
+        quatFromAxisAngle({ 0,0,1 }, 1);
+
+    for (int i = 0; i < 360; i++) {
+        current = quatRotate(q, current);
+    }
+
+    EXPECT_NEAR(current.x, original.x, 1e-3);
 }
 
 // ============================================================

@@ -1,6 +1,26 @@
 # **3D Vector Transformation API**
 
 ## Updates
+# This file includes all updates about the mock project.
+
+## 5/31/2026 Updates
+
+Moved documents to "DOCUMENTS" file. The DOCUMENT file includes subfiles that organize documents. 
+
+Added Specialized Tests in test.cpp
+
+Added Dockerfile.gcc for manual compatibility testing (For manual testing instruction, refer to below.)
+
+Added Dockerfile.clang for manual compatibility testing (For manual testing instruction, refer to below.)
+
+Added DOC-COMMON-ISSUE in DOCUMENTS/ASSIGNMENT-5 folder. This file includes information about common issues associated with my product. 
+
+Added DOC-CONFIGURATION in DOCUMENTS/ASSIGNMENT-5 folder. This file includes information about configuration that should be tested before production. 
+
+Added DOC-SPECIALIZED-TESTING in DOCUMENTS/ASSIGNMENT-5 folder. This file includes information about automated specialized testing used to validate the product. The implementation is found in LA-TEST-ENV/test.cpp.
+
+Added REPORT-SPECIALIZED-MANUAL-SPECIALIZED-TEST in DOCUMENTS/ASSIGNMENT-5 folder. This file includes information about manual testing done for the product. 
+
 ---
 ### 5/17/2026 Updates
 Added PRODUCT-QUESTIONNAIRE-ORIGINAL. Original copy of questionnaire to be given to test after tests.
@@ -91,3 +111,13 @@ docker build -t test
 docker run test
 ```
 
+### Here's how it should look if you are manually testing gcc (I've used "cpp-gcc-test" for my image name):
+```bash
+docker build -f Dockerfile.gcc -t cpp-gcc-test .
+docker docker run cpp-gcc-test
+```
+### Here's how it should look if you are manually testing clang (I've used "cpp-clang-test" for my image name):
+```bash
+docker build -f Dockerfile.gcc -t cpp-clang-test .
+docker docker run cpp-clang-test
+```
