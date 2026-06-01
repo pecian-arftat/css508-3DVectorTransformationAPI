@@ -1,0 +1,28 @@
+FROM ubuntu:24.04
+
+ENV DEBIAN_FRONTEND=noninteractive
+
+RUN apt-get update && apt-get install -y \
+    clang \
+    cmake \
+    make \
+    git \
+    && rm -rf /var/lib/apt/lists/*
+
+WORKDIR /app
+
+COPY . .
+
+RUN mkdir build
+
+# Tell CMake to use Clang
+RUN cmake . \
+    -DCMAKE_C_COMPILER=clang \
+    -DCMAKE_CXX_COMPILER=clang++
+
+# Build
+RUN cmake -S . -B build
+RUN cmake --build build
+
+# Run tests
+CMD ["ctest", "--test-dir", "build", "--output-on-failure"]
