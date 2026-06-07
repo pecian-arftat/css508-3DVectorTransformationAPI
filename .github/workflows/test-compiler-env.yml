@@ -1,4 +1,4 @@
-name: C++ CI (GCC & Clang)
+name: C++ CI (GCC & Clang with GTest)
 
 on:
   push:
@@ -7,22 +7,29 @@ on:
     branches: [ "master" ]
 
 jobs:
-  build:
-    name: Build (${{ matrix.compiler }})
+  build-and-test:
+    name: Build & Test (${{ matrix.compiler }})
     runs-on: ubuntu-latest
+    
     strategy:
       matrix:
         compiler: [g++, clang++]
 
     steps:
-      - name: Checkout code
+      - name: Checkout Code
         uses: actions/checkout@v4
 
-      - name: Install dependencies
-        run: sudo apt-get update && sudo apt-get install -y build-essential clang
-
-      - name: Compile C++ Code
+      - name: Install Dependencies
         run: |
-          export CXX=${{ matrix.compiler }}
-          # Adjust the files below to match your source files, or add cmake steps if using CMake
-          $CXX -Wall -Wextra -std=c++20 LA-TEST-ENV/test.cpp -o my_program
+          sudo apt-get update
+          sudo apt-get install -y cmake build-essential libgtest-dev clang
+
+      - name: Configure CMake
+        run: cmake -S LA-TEST-ENV -B build -DCMAKE_CXX_COMPILER=${{ matrix.compiler }}
+
+      - name: Build
+        run: cmake --build build
+
+      - name: Run Tests
+        working-directory: LA-TEST-ENV
+        run: ctest --test-dir ../build --output-on-failure
