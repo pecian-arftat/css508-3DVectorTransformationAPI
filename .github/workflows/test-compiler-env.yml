@@ -25,4 +25,4 @@ jobs:
         run: |
           export CXX=${{ matrix.compiler }}
           # Adjust the files below to match your source files, or add cmake steps if using CMake
-          $CXX -Wall -Wextra -std=c++20 test.cpp -o my_program
+          $CXX -Wall -Wextra -std=c++20 LA-TEST-ENV/test.cpp -o my_program
