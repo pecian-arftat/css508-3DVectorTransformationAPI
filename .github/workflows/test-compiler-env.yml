@@ -1,0 +1,28 @@
+name: C++ CI (GCC & Clang)
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+  build:
+    name: Build (${{ matrix.compiler }})
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        compiler: [g++, clang++]
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Install dependencies
+        run: sudo apt-get update && sudo apt-get install -y build-essential clang
+
+      - name: Compile C++ Code
+        run: |
+          export CXX=${{ matrix.compiler }}
+          # Adjust the files below to match your source files, or add cmake steps if using CMake
+          $CXX -Wall -Wextra -std=c++20 main.cpp -o my_program
