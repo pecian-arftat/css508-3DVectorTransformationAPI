@@ -7,16 +7,22 @@
 // console for easy verification.
 
 #include "pch.h"
-#include "LinearAlgebra.h"
+#include "VectorTransformation3D.h"
 
 
 
 int main()
 {
-	// Manual Test
+	// ============================================================
+	// Manual Integration Tests
+	// ============================================================
 
-	
+	// ============================================================
+	// Manual Test: Sequential Rotations and Magnitude Preservation
+	// ============================================================
+	// Description:
 	// This test applies a series of rotations to a vector and checks the final result.
+	// ============================================================
 	Vec3 expected{ 1,2,3 };
 	double magnitudeBefore = magnitude(expected);
 	Vec3 normalized = expected * (1.0 / magnitudeBefore); // normalize to avoid overflow
@@ -38,7 +44,12 @@ int main()
 		std::cout << "Test failed!" << std::endl;
 	}
 
+	// ============================================================
+	// Manual Test: Complete 360 Degree Rotations
+	// ============================================================
+	// Description:
 	// This test applies complete 360 degree rotations around each axis to ensure the vector returns to its original position.
+	// ============================================================
 	Vec3 expected2{ -3, -1, 2 };
 	Vec3 normalizedexpected2 = expected2 * (1.0 / magnitude(expected2)); // normalize to avoid overflow
 	Vec3 rotatedexpected2 = rotateEulerZ(normalizedexpected2, 360);
@@ -60,7 +71,12 @@ int main()
 		std::cout << "Test failed!" << std::endl;
 	}
 
+	// ============================================================
+	// Manual Test: Sequential 45 Degree Rotations
+	// ============================================================
+	// Description:
 	// This test applies sequential 45 degree rotations to one axis and checks the final result.
+	// ============================================================
 	Vec3 expected3{ 633, 946, 45 };
 	Vec3 normalizedexpected3 = expected3 * (1.0 / magnitude(expected3)); // normalize to avoid overflow
 	Vec3 rotatedexpected3 = rotateEulerZ(normalizedexpected3, 45);
@@ -83,7 +99,12 @@ int main()
 		std::cout << "Test failed!" << std::endl;
 	}
 	
+	// ============================================================
+	// Manual Test: Repeated 1 Degree Rotations and Numerical Stability
+	// ============================================================
+	// Description:
 	// This test conduct repeated transformations to check for numerical stability and precision over multiple operations.
+	// ============================================================
 	Vec3 expected4{ 12345, 67890, 13579 };
 	Vec3 normalizedexpected4 = expected4 * (1.0 / magnitude(expected4)); // normalize to avoid overflow
 	Vec3 rotatedexpected4 = rotateEulerX(normalizedexpected4, 1);
@@ -110,7 +131,12 @@ int main()
 		std::cout << "Test failed! As Expected. Numerical Drifting." << std::endl;
 	}
 
+	// ============================================================
+	// Manual Test: Repeated Quaternion Rotations and Numerical Stability
+	// ============================================================
+	// Description:
 	// This test applies repeated quaternion-based rotations to check for consistency with Euler rotations and to verify that the quaternion functions are working correctly.
+	// ============================================================
 	Quat qx = quatFromAxisAngle({ 1, 0, 0 }, 1);
 	Vec3 expected5{ 12345, 67890, 13579 };
 	Vec3 normalizedexpected5 = expected5 * (1.0 / magnitude(expected5)); // normalize to avoid overflow

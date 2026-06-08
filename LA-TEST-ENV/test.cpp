@@ -1,4 +1,7 @@
-// Testing github actions. This line of comment will be removed in the final version.
+// This file contains a comprehensive suite of unit tests, integration tests, end-to-end tests, and specialized tests for a 3D vector transformation library. 
+// The tests cover various aspects of the library's functionality, including basic operations like dot and cross products, quaternion rotations, Euler rotations, 
+// and more complex scenarios like shape verification and performance benchmarking. The tests are designed to validate the correctness, stability, and performance 
+// of the library under a wide range of conditions.
 
 #include "pch.h"
 
@@ -12,12 +15,18 @@
 
 #include "VectorTransformation3D.h"
 
-// ----------------------------
+// ============================================================
 // Unit Tests
-// ----------------------------
-// ----------------------------
-// Dot Product Tests
-// ----------------------------
+// ============================================================
+// Description:
+// These tests validate the core mathematical operations and transformations provided by the library. They cover basic functionality, edge cases, and invariants to 
+// ensure that the fundamental building blocks of the library are correct and stable. Each test is designed to be independent and focused on a specific aspect of the library's 
+// behavior.
+// ============================================================
+
+// ============================================================
+// Unit: Dot Product Tests
+// ============================================================
 TEST(DotProductTest, Basic) {
     Vec3 a{ 1,2,3 };
     EXPECT_DOUBLE_EQ(dot3(a, a), 14);
@@ -35,9 +44,9 @@ TEST(DotProductTest, Commutative) {
     EXPECT_DOUBLE_EQ(dot3(a, b), dot3(b, a));
 }
 
-// ----------------------------
-// Cross Product Tests
-// ----------------------------
+// ============================================================
+// Unit: Cross Product Tests
+// ============================================================
 TEST(CrossProductTest, Basis) {
     Vec3 i{ 1,0,0 }, j{ 0,1,0 };
     Vec3 k = cross3(i, j);
@@ -57,9 +66,9 @@ TEST(CrossProductTest, Parallel) {
     EXPECT_TRUE(almostEqualVec3(c, { 0,0,0 }));
 }
 
-// ----------------------------
-// Quaternion Tests
-// ----------------------------
+// ============================================================
+// Unit: Quaternion Tests
+// ============================================================
 TEST(QuaternionTest, Identity) {
     Quat q{ 1,0,0,0 };
     Vec3 v{ 1,2,3 };
@@ -90,9 +99,9 @@ TEST(QuaternionTest, Normalization) {
     EXPECT_TRUE(almostEqual(qn.w, 1.0));
 }
 
-// ----------------------------
-// Euler Tests
-// ----------------------------
+// ============================================================
+// Unit: Euler Tests
+// ============================================================
 TEST(EulerTest, Rotate90X) {
     Vec3 v{ 0,1,0 };
     Vec3 result = rotateEulerX(v, 90);
@@ -121,9 +130,9 @@ TEST(EulerTest, FullRotation) {
     EXPECT_TRUE(almostEqualVec3(rotateEulerZ(v, 360), v));
 }
 
-// ----------------------------
-// Consistency Tests
-// ----------------------------
+// ============================================================
+// Unit: Consistency Tests
+// ============================================================
 TEST(ConsistencyTest, EulerVsQuaternion) {
     Vec3 v{ 1,0,0 };
 
@@ -134,9 +143,9 @@ TEST(ConsistencyTest, EulerVsQuaternion) {
     EXPECT_TRUE(almostEqualVec3(eulerRot, quatRot));
 }
 
-// ----------------------------
-// Invariants
-// ----------------------------
+// ============================================================
+// Unit: Invariants
+// ============================================================
 TEST(InvariantTest, LengthPreserved) {
     Vec3 v{ 3,4,0 };
     Quat q = quatFromAxisAngle({ 0,0,1 }, 123);
@@ -156,9 +165,9 @@ TEST(InvariantTest, OrthogonalityPreserved) {
     EXPECT_NEAR(dot, 0.0, EPS);
 }
 
-// ----------------------------
-// Edge Cases
-// ----------------------------
+// ============================================================
+// Unit: Edge Cases
+// ============================================================
 TEST(EdgeCaseTest, SmallValues) {
     Vec3 v{ 1e-8, 0, 0 };
     Quat q = quatFromAxisAngle({ 0,0,1 }, 90);
@@ -175,9 +184,14 @@ TEST(EdgeCaseTest, LargeValues) {
     EXPECT_NEAR(magnitude(v), magnitude(result), 1e2);
 }
 
-// ----------------------------
+// ============================================================
 // Integration Tests
-// ----------------------------
+// ============================================================
+// Description:
+// These tests validate the interaction between multiple components of the library. They cover scenarios where different functions and transformations are combined, 
+// ensuring that they work together correctly and produce expected results. Integration tests often simulate real-world use cases and can reveal issues that may not be 
+// apparent in isolated unit tests.
+// ============================================================
 
 Vec4 applyEulerToVec4(const Vec4& v, double angleDeg) {
     Vec3 rotated = rotateEulerZ({ v.x, v.y, v.z }, angleDeg);
@@ -228,9 +242,9 @@ TEST(IntegrationTest, EulerQuaternion4DConsistencyPipeline) {
 }
 
 
-// ----------------------------
+// ============================================================
 // Integration: Composition Pipeline
-// ----------------------------
+// ============================================================
 TEST(IntegrationTest, QuaternionCompositionMatchesSequentialRotation) {
     Vec3 v{ 1,0,0 };
 
@@ -249,9 +263,9 @@ TEST(IntegrationTest, QuaternionCompositionMatchesSequentialRotation) {
     EXPECT_TRUE(almostEqualVec3(sequential, combinedResult));
 }
 
-// ----------------------------
+// ============================================================
 // Integration: Sequence of Euler Rotations to Original Vector
-// ----------------------------
+// ============================================================
 TEST(IntegrationTest, EulerFullRotationSequence) {
     Vec3 v{ 1,2,3 };
 	double magnitudeBefore = magnitude(v);
@@ -266,9 +280,9 @@ TEST(IntegrationTest, EulerFullRotationSequence) {
 	EXPECT_TRUE(almostEqualVec3(v, final));
 }
 
-// ----------------------------
+// ============================================================
 // Integration: Round Trip Conversion
-// ----------------------------
+// ============================================================
 TEST(IntegrationTest, QuaternionInverseRoundTrip) {
     Vec3 v{ 3, -2, 5 };
 
@@ -282,9 +296,9 @@ TEST(IntegrationTest, QuaternionInverseRoundTrip) {
 }
 
 
-// ----------------------------
+// ============================================================
 // Integration: Stress Test (Drift Detection)
-// ----------------------------
+// ============================================================
 TEST(IntegrationTest, RepeatedRotationStability) {
     Vec3 v{ 1,0,0 };
     Quat q = quatFromAxisAngle({ 0,0,1 }, 1); // small rotation
@@ -300,9 +314,9 @@ TEST(IntegrationTest, RepeatedRotationStability) {
 }
 
 
-// ----------------------------
+// ============================================================
 // Integration: Orthogonality Preservation
-// ----------------------------
+// ============================================================
 TEST(IntegrationTest, OrthogonalVectorsRemainOrthogonal) {
     Vec3 a{ 1,0,0 };
     Vec3 b{ 0,1,0 };
@@ -365,20 +379,20 @@ double distance(const Vec3& a, const Vec3& b) {
 
 TEST(E2ETest, CubeRotationPipeline_X45_Y45) {
 
-    // --------------------------------------------------------
+    // ============================================================
     // Step 1:
     // Create Cube Vertices
-    // --------------------------------------------------------
+    // ============================================================
 
     std::vector<Vec3> cube =
         createUnitCubeVertices();
 
     ASSERT_EQ(cube.size(), 8);
 
-    // --------------------------------------------------------
+    // ============================================================
     // Step 2:
     // Create Rotations
-    // --------------------------------------------------------
+    // ============================================================
 
     Quat rotateX =
         quatFromAxisAngle(
@@ -392,10 +406,10 @@ TEST(E2ETest, CubeRotationPipeline_X45_Y45) {
             45.0
         );
 
-    // --------------------------------------------------------
+    // ============================================================
     // Step 3:
     // Apply Sequential Rotations
-    // --------------------------------------------------------
+    // ============================================================
 
     std::vector<Vec3> transformed;
 
@@ -420,10 +434,10 @@ TEST(E2ETest, CubeRotationPipeline_X45_Y45) {
 
     ASSERT_EQ(transformed.size(), 8);
 
-    // --------------------------------------------------------
+    // ============================================================
     // Step 4:
     // Validate No NaN / Inf
-    // --------------------------------------------------------
+    // ============================================================
 
     for (const auto& v : transformed) {
 
@@ -436,13 +450,13 @@ TEST(E2ETest, CubeRotationPipeline_X45_Y45) {
         EXPECT_FALSE(std::isinf(v.z));
     }
 
-    // --------------------------------------------------------
+    // ============================================================
     // Step 5:
     // Validate Magnitude Preservation
     //
     // Rotation should not change
     // distance from origin
-    // --------------------------------------------------------
+    // ============================================================
 
     for (size_t i = 0; i < cube.size(); i++) {
 
@@ -459,12 +473,12 @@ TEST(E2ETest, CubeRotationPipeline_X45_Y45) {
         );
     }
 
-    // --------------------------------------------------------
+    // ============================================================
     // Step 6:
     // Validate Edge Length Preservation
     //
     // Cube edges should remain length 2
-    // --------------------------------------------------------
+    // ============================================================
 
     // Example edge:
     // Vertex 0 -> Vertex 1
@@ -490,12 +504,12 @@ TEST(E2ETest, CubeRotationPipeline_X45_Y45) {
         EPS
     );
 
-    // --------------------------------------------------------
+    // ============================================================
     // Step 7:
     // Validate Orthogonality Preservation
     //
     // Adjacent cube edges should remain orthogonal
-    // --------------------------------------------------------
+    // ============================================================
 
     Vec3 edgeA{
         transformed[1].x - transformed[0].x,
@@ -516,10 +530,10 @@ TEST(E2ETest, CubeRotationPipeline_X45_Y45) {
 
     EXPECT_NEAR(dot, 0.0, EPS);
 
-    // --------------------------------------------------------
+    // ============================================================
     // Step 8:
     // Validate Deterministic Output
-    // --------------------------------------------------------
+    // ============================================================
 
     std::vector<Vec3> rerun;
 
@@ -615,22 +629,22 @@ std::vector<Vec3> createShapeVertices() {
 
 TEST(E2ETest, VerifyShapeIsBoxUsingDotAndCross) {
 
-    // --------------------------------------------------------
+    // ============================================================
     // Step 1:
     // Load Unknown Shape
-    // --------------------------------------------------------
+    // ============================================================
 
     std::vector<Vec3> shape =
         createShapeVertices();
 
     ASSERT_EQ(shape.size(), 8);
 
-    // --------------------------------------------------------
+    // ============================================================
     // Step 2:
     // Construct Adjacent Edges
     //
     // Use vertex 0 as reference
-    // --------------------------------------------------------
+    // ============================================================
 
     Vec3 edgeX =
         subtract(shape[1], shape[0]);
@@ -641,12 +655,12 @@ TEST(E2ETest, VerifyShapeIsBoxUsingDotAndCross) {
     Vec3 edgeZ =
         subtract(shape[4], shape[0]);
 
-    // --------------------------------------------------------
+    // ============================================================
     // Step 3:
     // Verify Orthogonality Using dot3
     //
     // Adjacent edges of a box must be perpendicular
-    // --------------------------------------------------------
+    // ============================================================
 
     Vec3 edgeX3{
         edgeX.x,
@@ -679,12 +693,12 @@ TEST(E2ETest, VerifyShapeIsBoxUsingDotAndCross) {
     EXPECT_NEAR(dotXZ, 0.0, EPS);
     EXPECT_NEAR(dotYZ, 0.0, EPS);
 
-    // --------------------------------------------------------
+    // ============================================================
     // Step 4:
     // Verify Cross Products
     //
     // cross(X,Y) should align with Z
-    // --------------------------------------------------------
+    // ============================================================
 
     Vec3 crossXY =
         cross3(edgeX, edgeY);
@@ -732,10 +746,10 @@ TEST(E2ETest, VerifyShapeIsBoxUsingDotAndCross) {
         )
     );
 
-    // --------------------------------------------------------
+    // ============================================================
     // Step 5:
     // Verify Edge Length Consistency
-    // --------------------------------------------------------
+    // ============================================================
 
     double lenX =
         magnitude(edgeX);
@@ -750,10 +764,10 @@ TEST(E2ETest, VerifyShapeIsBoxUsingDotAndCross) {
     EXPECT_NEAR(lenY, 2.0, EPS);
     EXPECT_NEAR(lenZ, 2.0, EPS);
 
-    // --------------------------------------------------------
+    // ============================================================
     // Step 6:
     // Verify Opposite Edges Parallel
-    // --------------------------------------------------------
+    // ============================================================
 
     Vec3 oppositeX =
         subtract(shape[2], shape[3]);
@@ -767,10 +781,10 @@ TEST(E2ETest, VerifyShapeIsBoxUsingDotAndCross) {
         EPS
     );
 
-    // --------------------------------------------------------
+    // ============================================================
     // Step 7:
     // Verify No Invalid Values
-    // --------------------------------------------------------
+    // ============================================================
 
     for (const auto& v : shape) {
 
@@ -783,13 +797,13 @@ TEST(E2ETest, VerifyShapeIsBoxUsingDotAndCross) {
         EXPECT_FALSE(std::isinf(v.z));
     }
 
-    // --------------------------------------------------------
+    // ============================================================
     // Step 8:
     // Final Validation
     //
     // If all geometric properties hold:
     // Shape is verified as a valid box
-    // --------------------------------------------------------
+    // ============================================================
 
     SUCCEED();
 }
@@ -797,8 +811,16 @@ TEST(E2ETest, VerifyShapeIsBoxUsingDotAndCross) {
 // ============================================================
 // SPECIALIZED TESTS
 // ============================================================
+// Description: 
+// Tests designed to evaluate the library's behavior under extreme conditions, high load, or specific edge cases that may not be covered by standard unit and integration tests. 
+// These tests can help identify performance bottlenecks, stability issues, and potential security vulnerabilities in the library. They are often more complex and may require 
+// special setup or teardown procedures.
+// ============================================================
 
-// This test performs a large number of quaternion rotations
+
+// ============================================================
+// Specialized Test: Load Test - Million Quaternion Rotations
+// ============================================================
 TEST(SpecializedTest, LoadTest_MillionQuaternionRotations) {
 
     Vec3 v{ 1,0,0 };
@@ -819,7 +841,9 @@ TEST(SpecializedTest, LoadTest_MillionQuaternionRotations) {
     SUCCEED();
 }
 
-// This test checks how the system handles extreme coordinate values during rotation
+// ============================================================
+// Specialized Test: Stress Test - Extreme Coordinate Rotation
+// ============================================================
 TEST(SpecializedTest, StressTest_ExtremeCoordinateRotation) {
 
 	// Extreme values can cause floating-point instability.
@@ -835,7 +859,9 @@ TEST(SpecializedTest, StressTest_ExtremeCoordinateRotation) {
     EXPECT_FALSE(std::isinf(result.x));
 }
 
-// This test benchmarks the performance of quaternion rotations
+// ============================================================
+// Specialized Test: Performance Test - Quaternion Rotation Benchmark
+// ============================================================
 TEST(SpecializedTest, PerformanceTest_QuaternionBenchmark) {
 
     Vec3 v{ 1,0,0 };
@@ -866,7 +892,9 @@ TEST(SpecializedTest, PerformanceTest_QuaternionBenchmark) {
     SUCCEED();
 }
 
-// This test checks the formatting of floating-point numbers in the output stream
+// ============================================================
+// Specialized Test: Globalization Test - Floating-Point Formatting
+// ============================================================
 TEST(SpecializedTest, GlobalizationTest_FloatingPointFormatting) {
 
     double value = 3.1415926535;
@@ -878,7 +906,9 @@ TEST(SpecializedTest, GlobalizationTest_FloatingPointFormatting) {
     EXPECT_FALSE(ss.str().empty());
 }
 
-// This test checks how the system handles NaN inputs during quaternion rotation
+// ============================================================
+// Specialized Test: Security Test - NaN Input Handling
+// ============================================================
 TEST(SpecializedTest, SecurityTest_NaNInputHandling) {
 
     Vec3 v{
@@ -896,7 +926,9 @@ TEST(SpecializedTest, SecurityTest_NaNInputHandling) {
     EXPECT_TRUE(std::isnan(result.x));
 }
 
-// This test checks for numerical stability when applying repeated rotations
+// ============================================================
+// Specialized Test: Numerical Stability Test - Repeated Rotation Drift
+// ============================================================
 TEST(SpecializedTest, NumericalStabilityTest_RepeatedRotationDrift) {
 
     Vec3 original{ 1,0,0 };

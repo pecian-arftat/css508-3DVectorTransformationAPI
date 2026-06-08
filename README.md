@@ -3,6 +3,9 @@
 ## Updates
 # This file includes all updates about the mock project.
 
+## 6/6/2026 Updates
+Updated workflow to test project with compiler GCC and Clang. 
+
 ## 5/31/2026 Updates
 
 Moved documents to "DOCUMENTS" file. The DOCUMENT file includes subfiles that organize documents. 
@@ -107,7 +110,7 @@ Docker Desktop
 
 ### Here's how it should look on your cli (I've used "test" for my images name):
 ```bash
-docker build -t test
+docker build -t test .
 docker run test
 ```
 
@@ -120,4 +123,14 @@ docker docker run cpp-gcc-test
 ```bash
 docker build -f Dockerfile.gcc -t cpp-clang-test .
 docker docker run cpp-clang-test
+```
+
+## Common Error During Manual Testing
+
+When manual testing, be sure that you have opened the Docker Desktop software before step 2 or you will get an error message. 
+(On Windows Platform)
+```bash
+css508-LinearAlgebraLibrary\LA-TEST-ENV>docker build -t test .
+ERROR: failed to connect to the docker API at npipe:////./pipe/dockerDesktopLinuxEngine; check if the path is correct and if the daemon is running: open //./pipe/dockerDesktopLinuxEngine: The system cannot find the file specified.
+
 ```
