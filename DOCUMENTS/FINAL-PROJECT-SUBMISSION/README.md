@@ -37,5 +37,5 @@ css508-LinearAlgebraLibrary\LA-TEST-ENV\test.cpp
 ### Basic CI Workflow in GitHub Actions that Runs Automated Tests
 To find the basic CI workflow, please navigate to the following file according to the file path:
 ```bash
-css508-LinearAlgebraLibrary\.github\workflows\
+css508-LinearAlgebraLibrary\.github\workflows\test-compiler-env.yml
 ```

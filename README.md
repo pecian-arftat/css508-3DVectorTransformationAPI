@@ -1,5 +1,21 @@
 # **3D Vector Transformation API**
 
+## **IMPORTANT NOTE FOR FINAL SUBMISSION**
+For those reviewing this repository for final submission, I have added a file called "FINAL-PROJECT-SUBMISSION" in the DOCUMENTS folder. The purpose of this folder is to gather all the necessary CI/CD artifacts I have created in the past into a single folder for ease of review. All original documents still can be found manually by navigating within the repository. 
+
+This folder includes the following CI/CD artifacts: 
+1. Test Strategy Document
+2. Test Plan Document
+3. Manual Test Suite (and reasoning)
+4. Test Report (Automated + Manual)
+5. CI troubleshooting/maintenance reflection (designing testable software)
+
+This folder also includes a README file that details guidance to find the following CI/CD artifacts: 
+1. Automated Unit Tests
+2. Automated Integration Tests
+3. Automated E2E Tests
+4. Basic CI workflow in GitHub Actions that run automated tests
+
 ## Updates
 # This file includes all updates about the mock project.
 
